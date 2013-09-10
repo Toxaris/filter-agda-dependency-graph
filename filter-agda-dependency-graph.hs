@@ -50,8 +50,9 @@ processGraph srcpath dotgraph@DotGraph {graphStatements} = do
 
   -- filter out modules we don't want to keep
   let decide (_, name) = do
-        b1 <- doesFileExist (srcpath </> moduleToFilePath name <.> "agda")
-        b2 <- doesFileExist (srcpath </> moduleToFilePath name <.> "lagda")
+        let modulePath = moduleToFilePath name
+        b1 <- doesFileExist (srcpath </> modulePath <.> "agda")
+        b2 <- doesFileExist (srcpath </> modulePath <.> "lagda")
         return (b1 || b2)
   modules <- filterM decide modules
 
