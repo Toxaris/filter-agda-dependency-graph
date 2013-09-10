@@ -7,7 +7,7 @@ import Control.Monad (return, filterM)
 
 import Data.Array ((!))
 import Data.Bool (Bool (False, True), (&&), (||))
-import Data.Eq (Eq ((==)))
+import Data.Eq (Eq ((==), (/=)))
 import Data.Foldable (toList)
 import Data.Function ((.))
 import Data.Graph (graphFromEdges, path)
@@ -51,9 +51,10 @@ processGraph srcpath dotgraph@DotGraph {graphStatements} = do
   -- filter out modules we don't want to keep
   let decide (_, name) = do
         let modulePath = moduleToFilePath name
+        let b0 = modulePath /= "README"
         b1 <- doesFileExist (srcpath </> modulePath <.> "agda")
         b2 <- doesFileExist (srcpath </> modulePath <.> "lagda")
-        return (b1 || b2)
+        return (b0 && (b1 || b2))
   modules <- filterM decide modules
 
   -- the set of module ids we want to keep, with indexes
