@@ -36,6 +36,17 @@ import System.Environment (getArgs)
 import System.FilePath (FilePath, joinPath, (</>), (<.>))
 import System.IO (IO, print)
 
+-- Deciding whether to include or exclude a file
+
+includes :: FilePath -> FilePath -> IO Bool
+includes srcpath modulePath = do
+  let b0 = modulePath /= "README"
+  b1 <- doesFileExist (srcpath </> modulePath <.> "agda")
+  b2 <- doesFileExist (srcpath </> modulePath <.> "lagda")
+  return (b0 && (b1 || b2))
+
+-- filtering the graph
+
 moduleToFilePath :: Text -> FilePath
 moduleToFilePath = joinPath . map unpack . splitOn (pack ".")
 
@@ -51,10 +62,7 @@ processGraph srcpath dotgraph@DotGraph {graphStatements} = do
   -- filter out modules we don't want to keep
   let decide (_, name) = do
         let modulePath = moduleToFilePath name
-        let b0 = modulePath /= "README"
-        b1 <- doesFileExist (srcpath </> modulePath <.> "agda")
-        b2 <- doesFileExist (srcpath </> modulePath <.> "lagda")
-        return (b0 && (b1 || b2))
+        includes srcpath modulePath
   modules <- filterM decide modules
 
   -- the set of module ids we want to keep, with indexes
