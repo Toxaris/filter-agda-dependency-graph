@@ -7,7 +7,7 @@ import Control.Monad (return, filterM)
 
 import Data.Array ((!))
 import Data.Bool (Bool (False, True), (&&), (||))
-import Data.Eq (Eq ((==), (/=)))
+import Data.Eq (Eq ((==)))
 import Data.Foldable (toList)
 import Data.Function ((.))
 import Data.Graph (graphFromEdges, path)
@@ -23,7 +23,7 @@ import Data.GraphViz.Types.Generalised
   , DotStatement (DN, DE)
   , GraphID
   )
-import Data.List (map, null, drop, elem)
+import Data.List (map, null, drop, elem, notElem)
 import Data.Maybe (fromJust)
 import Data.Map as Map (fromList, size, lookup)
 import Data.Sequence as Seq (fromList)
@@ -40,7 +40,7 @@ import System.IO (IO, print)
 
 includes :: FilePath -> FilePath -> IO Bool
 includes srcpath modulePath = do
-  let b0 = modulePath /= "README"
+  let b0 = modulePath `notElem` ["README", "Everything"]
   b1 <- doesFileExist (srcpath </> modulePath <.> "agda")
   b2 <- doesFileExist (srcpath </> modulePath <.> "lagda")
   return (b0 && (b1 || b2))
