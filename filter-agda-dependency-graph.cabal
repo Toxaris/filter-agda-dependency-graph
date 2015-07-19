@@ -14,10 +14,10 @@ cabal-version:       >=1.8
 executable filter-agda-dependency-graph
   main-is:             filter-agda-dependency-graph.hs
   -- other-modules:       
-  build-depends:       array ==0.4.*,
-                       base ==4.6.*,
+  build-depends:       array >=0.4 && < 0.6,
+                       base >=4.6 && < 4.8,
                        containers ==0.5.*,
                        directory ==1.2.*,
                        filepath ==1.3.*,
-                       graphviz ==2999.16.*,
-                       text ==0.11.*
+                       graphviz >= 2999.16 && < 2999.18,
+                       text >= 0.11 && <1.2
